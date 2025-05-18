@@ -21,7 +21,7 @@ const Hero: React.FC = () => {
               Known for building innovative projects and participating in national hackathons.
             </p>
             <div className="flex flex-wrap gap-4">
-              <a href="/Harishwaran (3).pdf" className="btn-primary" download>
+              <a href="/Harishwaran.pdf" className="btn-primary" download>
                 <Download size={18} className="mr-2" />
                 Download Resume
               </a>
