@@ -14,7 +14,7 @@ const Hero: React.FC = () => {
               Hello, I'm <span className="gradient-text">Harishwaran.P</span>
             </h1>
             <h2 className="text-xl md:text-2xl mb-6 text-gray-700 dark:text-gray-300">
-              AI & Data Science Student | Full Stack Developer
+              AI & Data Science Student | Full Stack Developer | Chief Technology Officer (CTO)
             </h2>
             <p className="text-lg mb-8 text-gray-600 dark:text-gray-400 max-w-lg">
               Creative tech enthusiast passionate about AI, data science, and full-stack development. 

@@ -11,6 +11,12 @@ interface ExperienceItem {
 const Experience: React.FC = () => {
   const experiences: ExperienceItem[] = [
     {
+      company: 'Hexpertify',
+      position: 'Chief Technology Officer (CTO)',
+      period: 'Since 2024',
+      description: 'Led the architecture and deployment of Hexpertify AI-powered consulting platform. Integrated React, TypeScript, Node.js, Supabase, and Gemini 1.5 Pro to power features like personalized expert matching, secure data storage, and voice-enabled AI assistants. Built scalable microservices to support mental health, fitness, legal, and financial consultations with <1s response times. Managed a cross-functional dev team and implemented agile workflows, boosting release velocity by 60%. Ensured robust data privacy & security policies, aligning with ISO and GDPR standards.'
+    },
+    {
       company: 'Vulture Lines Pvt Ltd',
       position: 'Data Analyst Intern',
       period: 'Feb 2025 - Mar 2025',
@@ -48,8 +54,24 @@ const Experience: React.FC = () => {
                 
                 <div className={`md:w-5/12 ${index % 2 === 0 ? 'md:pr-12 md:ml-auto' : 'md:pl-12'}`}>
                   <div className="exp-card">
-                    <h3 className="text-xl font-bold mb-1">{exp.position}</h3>
-                    <h4 className="text-lg text-purple-600 dark:text-purple-400 mb-2">{exp.company}</h4>
+                    <h3 className="text-xl font-bold mb-1">
+                      {exp.position === 'Chief Technology Officer (CTO)' ? (
+                        <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                          {exp.position}
+                        </span>
+                      ) : (
+                        exp.position
+                      )}
+                    </h3>
+                    <h4 className="text-lg text-purple-600 dark:text-purple-400 mb-2">
+                      {exp.company === 'Hexpertify' ? (
+                        <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                          {exp.company}
+                        </span>
+                      ) : (
+                        exp.company
+                      )}
+                    </h4>
                     <div className="flex items-center mb-4 text-gray-600 dark:text-gray-400">
                       <Calendar size={16} className="mr-2" />
                       {exp.period}
