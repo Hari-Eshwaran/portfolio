@@ -48,7 +48,7 @@ const Footer: React.FC = () => {
           <p className="flex items-center justify-center">
             Made with <Heart size={16} className="mx-1 text-red-500" /> {currentYear}
           </p>
-          <p className="mt-2">All Rights Reserved &copy; Harishwaran.P</p>
+          <p className="mt-2">All Rights Reserved & copy; Harishwaran.P</p>
         </div>
       </div>
     </footer>
