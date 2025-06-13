@@ -8,6 +8,7 @@ import Education from './components/sections/Education';
 import Projects from './components/sections/Projects';
 import TechStack from './components/sections/TechStack';
 import Certifications from './components/sections/Certifications';
+import ProfessionalCertificates from './components/sections/ProfessionalCertificates';
 import Achievements from './components/sections/Achievements';
 import Contact from './components/sections/Contact';
 import { Sun, Moon } from 'lucide-react';
@@ -49,6 +50,7 @@ function App() {
         <Education />
         <Projects />
         <TechStack />
+        <ProfessionalCertificates />
         <Certifications />
         <Achievements />
         <Contact />

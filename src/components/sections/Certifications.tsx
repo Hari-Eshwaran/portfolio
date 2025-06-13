@@ -19,13 +19,6 @@ const Certifications: React.FC = () => {
       icon: <Award size={24} />
     },
     {
-      title: 'Full Stack Development',
-      issuer: 'LinkedIn Learning',
-      date: 'December 2024',
-      link: '#',
-      icon: <Award size={24} />
-    },
-    {
       title: 'SQL',
       issuer: 'LinkedIn Learning',
       date: 'September 2024',

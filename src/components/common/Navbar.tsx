@@ -28,8 +28,8 @@ const Navbar: React.FC = () => {
       let currentSection = 'hero';
 
       sections.forEach((section) => {
-        const sectionTop = section.offsetTop - 100;
-        const sectionHeight = section.offsetHeight;
+        const sectionTop = (section as HTMLElement).offsetTop - 100;
+        const sectionHeight = (section as HTMLElement).offsetHeight;
         if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
           currentSection = section.getAttribute('id') || 'hero';
         }
@@ -49,6 +49,7 @@ const Navbar: React.FC = () => {
     { name: 'Education', href: '#education' },
     { name: 'Projects', href: '#projects' },
     { name: 'Skills', href: '#skills' },
+    { name: 'Professional Certificates', href: '#professional-certificates' },
     { name: 'Certifications', href: '#certifications' },
     { name: 'Achievements', href: '#achievements' },
     { name: 'Contact', href: '#contact' }
@@ -94,15 +95,15 @@ const Navbar: React.FC = () => {
 
       {/* Mobile menu */}
       <div className={`md:hidden ${isOpen ? 'block' : 'hidden'}`}>
-        <div className="px-2 pt-2 pb-3 space-y-1 bg-white dark:bg-gray-900 shadow-lg">
+        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
           {navLinks.map((link) => (
             <a
               key={link.name}
               href={link.href}
               className={`block px-3 py-2 rounded-md text-base font-medium ${
                 activeSection === link.href.substring(1)
-                  ? 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-gray-800'
-                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                  ? 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/30'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
               }`}
               onClick={closeMenu}
             >
