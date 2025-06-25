@@ -151,6 +151,10 @@ const Contact: React.FC = () => {
                     <a href="mailto:harishwaran@hexpertify.com" className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400">
                       harishwaran@hexpertify.com
                     </a>
+                    <br />
+                    <a href="mailto:mail@harishwaran.tech" className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400">
+                      mail@harishwaran.tech
+                    </a>
                   </div>
                 </div>
                 <div className="flex items-start">
