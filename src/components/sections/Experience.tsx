@@ -17,6 +17,12 @@ const Experience: React.FC = () => {
       description: 'Led the architecture and deployment of Hexpertify AI-powered consulting platform. Integrated React, TypeScript, Node.js, Supabase, and Gemini 1.5 Pro to power features like personalized expert matching, secure data storage, and voice-enabled AI assistants. Built scalable microservices to support mental health, fitness, legal, and financial consultations with <1s response times. Managed a cross-functional dev team and implemented agile workflows, boosting release velocity by 60%. Ensured robust data privacy & security policies, aligning with ISO and GDPR standards.'
     },
     {
+      company: 'OneYes Infotech Solutions Pvt. Ltd',
+      position: 'AI & ML Developer Intern',
+      period: 'May 2025 - June 2025',
+      description: 'Completed AI & ML Developer Internship Program at OneYes Infotech Solutions Pvt. Ltd. (Chennai) from 21st May 2025 to 20th June 2025. Awarded Certificate of Excellence for outstanding performance and successful completion of the program.'
+    },
+    {
       company: 'Vulture Lines Pvt Ltd',
       position: 'Data Analyst Intern',
       period: 'Feb 2025 - Mar 2025',
