@@ -106,6 +106,13 @@ const Projects: React.FC = () => {
       technologies: ['Python', 'Streamlit', 'YOLOv5', 'OpenCV', 'Pandas', 'AI'],
       category: 'ai',
       githubLink: 'https://github.com/Hari-Eshwaran/Smart-Traffic-Management-System-AI-Powered'
+    },
+    {
+      title: 'Organ Donation DApp',
+      description: 'A decentralized platform for organ donation built with Next.js, Hardhat, and Solidity.',
+      technologies: ['Next.js', 'Hardhat', 'Solidity', 'TypeScript', 'Chakra UI', 'Ethers.js', 'Web3'],
+      category: 'web',
+      githubLink: 'https://github.com/Hari-Eshwaran/Organ-Donation-DApp'
     }
   ];
 
