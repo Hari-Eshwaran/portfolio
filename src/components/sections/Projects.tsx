@@ -92,6 +92,13 @@ const Projects: React.FC = () => {
       category: 'data',
       githubLink: 'https://github.com/Hari-Eshwaran/Employee-Performance-Dashboard',
       demoLink: 'https://employee-performance-dashboard-nine.vercel.app/'
+    },
+    {
+      title: 'AI-Powered Mental Health Analysis Dashboard',
+      description: 'This project provides a comprehensive mental health analysis dashboard that combines machine learning, data visualization, and interactive features to analyze mental health patterns, mood tracking, and student mental health statistics.\n\n🚀 Features:\n- Interactive Dashboard: Built with Streamlit for an intuitive user interface\n- Mood Analysis: Track and analyze mood patterns over time\n- Diagnosis Analysis: Analyze mental health diagnoses and treatment outcomes\n- Student Mental Health: Comprehensive analysis of student mental health data\n- Correlation Analysis: Identify relationships between various mental health factors\n- Machine Learning Models: Mood prediction model, mental health diagnosis prediction model, sentiment analysis capabilities',
+      technologies: ['Python', 'Streamlit', 'Machine Learning', 'Data Visualization', 'Pandas', 'Plotly'],
+      category: 'ai',
+      githubLink: 'https://github.com/Hari-Eshwaran/AI-Powered-Mental-Health-Analysis-Dashboard'
     }
   ];
 
