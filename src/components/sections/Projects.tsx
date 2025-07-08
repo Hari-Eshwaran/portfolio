@@ -99,6 +99,13 @@ const Projects: React.FC = () => {
       technologies: ['Python', 'Streamlit', 'Machine Learning', 'Data Visualization', 'Pandas', 'Plotly'],
       category: 'ai',
       githubLink: 'https://github.com/Hari-Eshwaran/AI-Powered-Mental-Health-Analysis-Dashboard'
+    },
+    {
+      title: 'Smart Traffic Management System (AI-Powered)',
+      description: 'A Streamlit web app that simulates a smart traffic light controller using AI to detect traffic density and prioritize lanes accordingly. Emergency vehicles are given highest priority with complete stop signals.',
+      technologies: ['Python', 'Streamlit', 'YOLOv5', 'OpenCV', 'Pandas', 'AI'],
+      category: 'ai',
+      githubLink: 'https://github.com/Hari-Eshwaran/Smart-Traffic-Management-System-AI-Powered'
     }
   ];
 
