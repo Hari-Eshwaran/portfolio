@@ -31,7 +31,7 @@ const Achievements: React.FC = () => {
     },
     {
       title: '1st Place – Startup Forage (SRMIST)',
-      description: 'Absolutely delighted to announce that Jaswanth Jegan & I secured 1st place in the Startup Forage competition conducted by SRM Institute of Science and Technology (SRMIST), Ramapuram on 6th February 2025! We presented our startup, Hexpertify.com – an online consulting platform connecting people with certified experts from various fields.\n\nFounder & CEO: Jaswanth Jegan\nChief Technology Officer: Harishwaran Petchimuthu\n\nA big thank you to the organizers, judges, and participants for this memorable experience. This is just the beginning, and I am excited to see where this journey takes us!',
+      description: 'Absolutely delighted to announce that Jaswanth Jegan & I secured 1st place in the Startup Forage competition conducted by SRM Institute of Science and Technology (SRMIST)',
       icon: <Trophy size={24} className="text-yellow-500" />
     }
   ];
