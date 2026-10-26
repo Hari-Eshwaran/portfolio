@@ -152,8 +152,8 @@ const Contact: React.FC = () => {
                       harishwaran@hexpertify.com
                     </a>
                     <br />
-                    <a href="mailto:mail@harishwaran.tech" className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400">
-                      mail@harishwaran.tech
+                    <a href="mailto:tech@harishwaran.dpdns.org" className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400">
+                      tech@harishwaran.dpdns.org
                     </a>
                   </div>
                 </div>

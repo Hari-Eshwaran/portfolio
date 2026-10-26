@@ -35,7 +35,7 @@ const Footer: React.FC = () => {
               <Linkedin size={20} />
             </a>
             <a 
-              href="mailto:mail@harishwaran.tech" 
+              href="mailto:tech@harishwaran.dpdns.org" 
               aria-label="Email"
               className="social-icon"
             >
