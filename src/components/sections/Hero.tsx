@@ -21,11 +21,20 @@ const Hero: React.FC = () => {
               Known for building innovative projects and participating in national hackathons.
             </p>
             <div className="flex flex-wrap gap-4">
-              <a href="/Harishwaran.pdf" className="btn-primary" download>
+              <a 
+                href="/Harishwaran.pdf" 
+                className="btn-primary" 
+                download 
+                aria-label="Download Harishwaran's resume in PDF format"
+              >
                 <Download size={18} className="mr-2" />
                 Download Resume
               </a>
-              <a href="#contact" className="btn-secondary">
+              <a 
+                href="#contact" 
+                className="btn-secondary"
+                aria-label="Navigate to contact section"
+              >
                 Contact Me
               </a>
             </div>
@@ -38,8 +47,10 @@ const Hero: React.FC = () => {
               <div className="w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-xl relative z-10">
                 <img
                   src="/f.jpg"
-                  alt="Profile"
+                  alt="Harishwaran.P - AI & Data Science Engineer, Full Stack Developer and CTO"
                   className="w-full h-full object-cover"
+                  width="320"
+                  height="320"
                 />
               </div>
             </div>
@@ -48,7 +59,11 @@ const Hero: React.FC = () => {
 
         {/* Scroll down indicator */}
         <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce hidden md:block">
-          <a href="#about" className="text-gray-600 dark:text-gray-400 flex flex-col items-center">
+          <a 
+            href="#about" 
+            className="text-gray-600 dark:text-gray-400 flex flex-col items-center"
+            aria-label="Scroll down to About section"
+          >
             <span className="text-sm mb-2">Scroll Down</span>
             <ArrowDown size={20} />
           </a>

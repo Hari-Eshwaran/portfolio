@@ -172,6 +172,7 @@ const Projects: React.FC = () => {
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="flex items-center text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300"
+                    aria-label={`View ${project.title} source code on GitHub`}
                   >
                     <Github size={18} className="mr-1" />
                     Code
@@ -183,6 +184,7 @@ const Projects: React.FC = () => {
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="flex items-center text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300"
+                    aria-label={`Visit live demo for ${project.title}`}
                   >
                     <ExternalLink size={18} className="mr-1" />
                     Live Demo

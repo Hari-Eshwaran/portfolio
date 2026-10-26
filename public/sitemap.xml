@@ -1,33 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.harishwaran.tech/</loc>
+    <loc>https://harishwaran.dpdns.org/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://www.harishwaran.tech/#about</loc>
+    <loc>https://harishwaran.dpdns.org/#about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.harishwaran.tech/#experience</loc>
+    <loc>https://harishwaran.dpdns.org/#experience</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.harishwaran.tech/#education</loc>
+    <loc>https://harishwaran.dpdns.org/#education</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.harishwaran.tech/#projects</loc>
+    <loc>https://harishwaran.dpdns.org/#projects</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.harishwaran.tech/#techstack</loc>
+    <loc>https://harishwaran.dpdns.org/#skills</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.harishwaran.tech/#professional-certificates</loc>
+    <loc>https://harishwaran.dpdns.org/#professional-certificates</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.harishwaran.tech/#certifications</loc>
+    <loc>https://harishwaran.dpdns.org/#certifications</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.harishwaran.tech/#achievements</loc>
+    <loc>https://harishwaran.dpdns.org/#achievements</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.harishwaran.tech/#contact</loc>
+    <loc>https://harishwaran.dpdns.org/#contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
-</urlset> 
+</urlset>

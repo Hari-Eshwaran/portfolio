@@ -1,0 +1,6 @@
+# robots.txt for https://harishwaran.dpdns.org/
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://harishwaran.dpdns.org/sitemap.xml

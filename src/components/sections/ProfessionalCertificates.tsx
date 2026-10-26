@@ -122,6 +122,7 @@ const ProfessionalCertificates: React.FC = () => {
                       target="_blank" 
                       rel="noopener noreferrer" 
                       className="inline-flex items-center text-purple-600 dark:text-purple-400 hover:underline"
+                      aria-label={`View ${cert.title} credential from ${cert.issuer}`}
                     >
                       View Certificate
                       <ExternalLink size={14} className="ml-1" />

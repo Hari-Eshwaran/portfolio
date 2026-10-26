@@ -9,7 +9,7 @@ const Footer: React.FC = () => {
       <div className="container-custom">
         <div className="flex flex-col items-center md:flex-row md:justify-between">
           <div className="mb-4 md:mb-0">
-            <h2 className="text-xl font-bold gradient-text">Harishwaran.P</h2>
+            <p className="text-xl font-bold gradient-text">Harishwaran.P</p>
             <p className="text-sm text-gray-600 dark:text-gray-400">
               AI & Data Science Student | Full Stack Developer
             </p>

@@ -84,9 +84,10 @@ const Navbar: React.FC = () => {
             <button
               onClick={toggleMenu}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none"
-              aria-expanded="false"
+              aria-expanded={isOpen}
+              aria-label={isOpen ? "Close main navigation menu" : "Open main navigation menu"}
             >
-              <span className="sr-only">Open main menu</span>
+              <span className="sr-only">{isOpen ? "Close main navigation menu" : "Open main navigation menu"}</span>
               {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>

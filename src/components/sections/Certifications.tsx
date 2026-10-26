@@ -80,6 +80,7 @@ const Certifications: React.FC = () => {
                       target="_blank" 
                       rel="noopener noreferrer" 
                       className="inline-flex items-center text-purple-600 dark:text-purple-400 hover:underline"
+                      aria-label={`View ${cert.title} certificate issued by ${cert.issuer}`}
                     >
                       View Certificate
                       <ExternalLink size={14} className="ml-1" />
