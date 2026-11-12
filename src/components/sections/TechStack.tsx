@@ -1,86 +1,114 @@
-import React, { useState } from 'react';
-import { Code, Server, Database, Palette, BarChart, Cpu } from 'lucide-react';
+import { ArrowUpRight, BadgeCheck } from 'lucide-react';
+import { professionalCertificates, skillGroups, totalCertifications } from '../../data/portfolio';
+import type { Skill } from '../../types';
+import Reveal from '../ui/Reveal';
+import SectionHeading, { Accent } from '../ui/SectionHeading';
+import SpotlightCard from '../ui/SpotlightCard';
 
-interface TechSkill {
-  name: string;
-  icon: React.ReactNode;
-  category: 'frontend' | 'backend' | 'database' | 'design' | 'dataScience' | 'other';
-}
+const allSkills = skillGroups.flatMap((group) => group.items);
+const half = Math.ceil(allSkills.length / 2);
+const marqueeRows = [allSkills.slice(0, half), allSkills.slice(half)];
 
-const TechStack: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState<string>('all');
+// "Microsoft & LinkedIn" → ["Microsoft", "LinkedIn Learning"], then de-duplicate.
+const certifiedBy = Array.from(
+  new Set(
+    professionalCertificates.flatMap((c) =>
+      c.issuer.split(' & ').map((name) => (name === 'LinkedIn' ? 'LinkedIn Learning' : name)),
+    ),
+  ),
+);
 
-  const techSkills: TechSkill[] = [
-    { name: 'Python', icon: <Code size={24} />, category: 'backend' },
-    { name: 'React.js', icon: <Code size={24} />, category: 'frontend' },
-    { name: 'Node.js', icon: <Server size={24} />, category: 'backend' },
-    { name: 'Tailwind CSS', icon: <Palette size={24} />, category: 'frontend' },
-    { name: 'Figma', icon: <Palette size={24} />, category: 'design' },
-    { name: 'PowerBI', icon: <BarChart size={24} />, category: 'dataScience' },
-    { name: 'DevOps', icon: <Server size={24} />, category: 'other' },
-    { name: 'Machine Learning', icon: <Cpu size={24} />, category: 'dataScience' },
-    { name: 'MongoDB', icon: <Database size={24} />, category: 'database' },
-    { name: 'TypeScript', icon: <Code size={24} />, category: 'frontend' },
-    { name: 'SQL', icon: <Database size={24} />, category: 'database' },
-    { name: 'TensorFlow', icon: <Cpu size={24} />, category: 'dataScience' }
-  ];
+const MarqueeRow = ({ items, reverse = false }: { items: Skill[]; reverse?: boolean }) => (
+  <div className="mask-x pause-on-hover flex overflow-hidden">
+    {/* Content is duplicated so the -50% translate loops seamlessly */}
+    <ul
+      className={`flex w-max shrink-0 gap-3 pr-3 motion-reduce:animate-none ${
+        reverse ? 'animate-marquee-reverse' : 'animate-marquee'
+      }`}
+    >
+      {[...items, ...items].map(({ name, icon: Icon }, i) => (
+        <li
+          key={`${name}-${i}`}
+          className="flex items-center gap-2.5 whitespace-nowrap rounded-full border border-line bg-surface px-4 py-2.5 text-sm"
+        >
+          <Icon size={16} className="text-muted" />
+          {name}
+        </li>
+      ))}
+    </ul>
+  </div>
+);
 
-  const categories = [
-    { id: 'all', name: 'All Technologies' },
-    { id: 'frontend', name: 'Frontend' },
-    { id: 'backend', name: 'Backend' },
-    { id: 'database', name: 'Database' },
-    { id: 'dataScience', name: 'Data Science' },
-    { id: 'design', name: 'Design' },
-    { id: 'other', name: 'Other' }
-  ];
+const TechStack = () => (
+  <section id="skills" className="relative overflow-hidden border-t border-line py-24 md:py-32">
+    <div className="container-x">
+      <SectionHeading
+        index="04"
+        label="Stack"
+        title={
+          <>
+            Tools I use to <Accent>think</Accent> and build.
+          </>
+        }
+        description={`${allSkills.length}+ technologies across the full lifecycle — from training models to deploying products.`}
+      />
+    </div>
 
-  const filteredSkills = activeCategory === 'all'
-    ? techSkills
-    : techSkills.filter(skill => skill.category === activeCategory);
+    {/* Marquee (decorative — the grid below lists everything) */}
+    <div aria-hidden="true" className="mb-16 space-y-3 md:mb-20">
+      <MarqueeRow items={marqueeRows[0]} />
+      <MarqueeRow items={marqueeRows[1]} reverse />
+    </div>
 
-  return (
-    <section id="skills" className="py-20 bg-gray-50 dark:bg-gray-900">
-      <div className="container-custom">
-        <h2 className="section-title">Tech Stack</h2>
-        
-        {/* Category Filters */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
-          {categories.map(category => (
-            <button
-              key={category.id}
-              onClick={() => setActiveCategory(category.id)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-300 ${
-                activeCategory === category.id
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-              }`}
-            >
-              {category.name}
-            </button>
-          ))}
-        </div>
-        
-        {/* Skills Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-          {filteredSkills.map((skill, index) => (
-            <div 
-              key={index} 
-              className="tech-icon"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <div className="mb-3 text-purple-600 dark:text-purple-400">
-                {skill.icon}
+    <div className="container-x">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {skillGroups.map(({ title, icon: GroupIcon, items }, i) => (
+          <Reveal key={title} delay={(i % 3) * 0.06}>
+            <SpotlightCard className="h-full p-7">
+              <div className="flex items-center justify-between">
+                <span className="grid h-11 w-11 place-items-center rounded-2xl border border-line bg-surface-2 text-accent-ink">
+                  <GroupIcon size={20} />
+                </span>
+                <span className="font-mono text-xs text-muted">{String(items.length).padStart(2, '0')}</span>
               </div>
-              <span className="font-medium text-gray-800 dark:text-gray-200">
-                {skill.name}
+              <h3 className="mt-6 text-lg font-semibold tracking-tight">{title}</h3>
+              <ul className="mt-5 flex flex-wrap gap-2">
+                {items.map(({ name, icon: Icon }) => (
+                  <li
+                    key={name}
+                    className="group/skill flex items-center gap-2 rounded-xl border border-line bg-bg px-3 py-2 text-sm transition-colors hover:border-fg/20"
+                  >
+                    <Icon size={15} className="text-muted transition-colors group-hover/skill:text-accent-ink" />
+                    {name}
+                  </li>
+                ))}
+              </ul>
+            </SpotlightCard>
+          </Reveal>
+        ))}
+
+        {/* Certified-by banner */}
+        <Reveal delay={0.12} className="md:col-span-2 lg:col-span-3">
+          <a href="#certifications" className="group block h-full">
+            <SpotlightCard className="flex h-full flex-col gap-6 overflow-hidden bg-fg p-7 text-bg md:flex-row md:items-center md:gap-8 md:p-8">
+              <div aria-hidden="true" className="absolute -bottom-20 right-10 h-56 w-56 rounded-full bg-accent/40 blur-3xl" />
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-accent text-accent-fg">
+                <BadgeCheck size={22} />
               </span>
-            </div>
-          ))}
-        </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold tracking-tight md:text-xl">Certified by industry leaders</h3>
+                <p className="mt-2 text-sm leading-relaxed text-bg/70">{certifiedBy.join(' · ')}</p>
+              </div>
+              <span className="inline-flex shrink-0 items-center gap-2 font-mono text-xs uppercase tracking-[0.14em] text-bg/70 transition-colors group-hover:text-bg">
+                View {totalCertifications} credentials
+                <ArrowUpRight size={16} className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </span>
+            </SpotlightCard>
+          </a>
+        </Reveal>
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
 export default TechStack;

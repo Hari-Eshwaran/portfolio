@@ -1,119 +1,170 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowUpRight, Download, Menu, X } from 'lucide-react';
+import { FaLinkedinIn } from 'react-icons/fa';
+import { SiGithub } from 'react-icons/si';
+import { navLinks, profile } from '../../data/portfolio';
+import { useActiveSection } from '../../hooks/useActiveSection';
+import ThemeToggle from '../ui/ThemeToggle';
 
-const Navbar: React.FC = () => {
+// 'hero' is observed too, so no link stays highlighted after scrolling back to the top.
+const sectionIds = ['hero', ...navLinks.map((link) => link.id)];
+
+const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('hero');
   const [scrolled, setScrolled] = useState(false);
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const closeMenu = () => {
-    setIsOpen(false);
-  };
+  const active = useActiveSection(sectionIds);
 
   useEffect(() => {
-    const handleScroll = () => {
-      // Set scrolled state
-      if (window.scrollY > 50) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-
-      // Determine active section
-      const sections = document.querySelectorAll('section[id]');
-      let currentSection = 'hero';
-
-      sections.forEach((section) => {
-        const sectionTop = (section as HTMLElement).offsetTop - 100;
-        const sectionHeight = (section as HTMLElement).offsetHeight;
-        if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
-          currentSection = section.getAttribute('id') || 'hero';
-        }
-      });
-
-      setActiveSection(currentSection);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const navLinks = [
-    { name: 'Home', href: '#hero' },
-    { name: 'About', href: '#about' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Education', href: '#education' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Professional Certificates', href: '#professional-certificates' },
-    { name: 'Certifications', href: '#certifications' },
-    { name: 'Achievements', href: '#achievements' },
-    { name: 'Contact', href: '#contact' }
-  ];
+  // Lock page scroll and enable Escape-to-close while the mobile menu is open.
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setIsOpen(false);
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [isOpen]);
+
+  const close = () => setIsOpen(false);
 
   return (
-    <nav className={`fixed w-full z-40 transition-all duration-300 ${scrolled ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm shadow-md' : 'bg-transparent'}`}>
-      <div className="container-custom">
-        <div className="flex items-center justify-between h-16">
+    <>
+      <header
+        className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500 ${
+          scrolled && !isOpen
+            ? 'border-b border-line/70 bg-bg/75 backdrop-blur-xl'
+            : 'border-b border-transparent'
+        }`}
+      >
+        <div className="container-x flex h-[72px] items-center justify-between gap-4">
           {/* Logo */}
-          <a href="#hero" className="text-xl font-bold gradient-text">
-            Harishwaran.P
+          <a href="#hero" onClick={close} className="group flex items-center gap-3" aria-label="Back to top">
+            <span className="grid h-9 w-9 place-items-center rounded-xl bg-fg font-mono text-[11px] font-semibold tracking-wider text-bg transition-transform duration-300 group-hover:-rotate-6">
+              {profile.initials}
+            </span>
+            <span className="hidden font-medium tracking-tight sm:block">{profile.shortName}</span>
           </a>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="flex space-x-1">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  className={`nav-link ${activeSection === link.href.substring(1) ? 'active' : ''}`}
-                >
-                  {link.name}
-                </a>
-              ))}
-            </div>
-          </div>
+          {/* Desktop navigation */}
+          <nav aria-label="Primary" className="hidden lg:block">
+            <ul className="flex items-center gap-0.5 rounded-full border border-line bg-surface/70 p-1 shadow-sm backdrop-blur-xl">
+              {navLinks.map((link) => {
+                const isActive = active === link.id;
+                return (
+                  <li key={link.id}>
+                    <a
+                      href={`#${link.id}`}
+                      aria-current={isActive ? 'true' : undefined}
+                      className={`relative isolate block rounded-full px-3.5 py-1.5 text-[13px] transition-colors duration-300 ${
+                        isActive ? 'text-fg' : 'text-muted hover:text-fg'
+                      }`}
+                    >
+                      {isActive && (
+                        <motion.span
+                          layoutId="nav-active"
+                          className="absolute inset-0 -z-10 rounded-full border border-line bg-surface-2"
+                          transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                        />
+                      )}
+                      {link.label}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <button
-              onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none"
-              aria-expanded={isOpen}
-              aria-label={isOpen ? "Close main navigation menu" : "Open main navigation menu"}
+          {/* Actions */}
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <a
+              href={profile.resume}
+              download
+              className="btn-primary hidden !px-4 !py-2.5 sm:inline-flex"
+              aria-label="Download résumé (PDF)"
             >
-              <span className="sr-only">{isOpen ? "Close main navigation menu" : "Open main navigation menu"}</span>
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
+              Résumé
+              <Download size={15} />
+            </a>
+            <button
+              type="button"
+              onClick={() => setIsOpen((open) => !open)}
+              className="icon-btn lg:hidden"
+              aria-expanded={isOpen}
+              aria-controls="mobile-menu"
+              aria-label={isOpen ? 'Close menu' : 'Open menu'}
+            >
+              {isOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
         </div>
-      </div>
+      </header>
 
       {/* Mobile menu */}
-      <div className={`md:hidden ${isOpen ? 'block' : 'hidden'}`}>
-        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              className={`block px-3 py-2 rounded-md text-base font-medium ${
-                activeSection === link.href.substring(1)
-                  ? 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/30'
-                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-              }`}
-              onClick={closeMenu}
-            >
-              {link.name}
-            </a>
-          ))}
-        </div>
-      </div>
-    </nav>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            id="mobile-menu"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 z-40 overflow-y-auto bg-bg/95 backdrop-blur-2xl lg:hidden"
+          >
+            <nav aria-label="Mobile" className="container-x flex min-h-full flex-col pb-10 pt-28">
+              <ul className="space-y-1">
+                {navLinks.map((link, i) => (
+                  <motion.li
+                    key={link.id}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.04 * i, duration: 0.4 }}
+                  >
+                    <a
+                      href={`#${link.id}`}
+                      onClick={close}
+                      className={`group flex items-baseline gap-4 border-b border-line py-3 text-3xl font-semibold tracking-tight transition-colors sm:text-4xl ${
+                        active === link.id ? 'text-accent-ink' : 'text-fg'
+                      }`}
+                    >
+                      <span className="w-6 font-mono text-xs font-normal text-muted">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                      {link.label}
+                      <ArrowUpRight
+                        size={22}
+                        className="ml-auto self-center text-muted transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                      />
+                    </a>
+                  </motion.li>
+                ))}
+              </ul>
+
+              <div className="mt-auto flex flex-wrap items-center gap-3 pt-10">
+                <a href={profile.resume} download className="btn-primary" onClick={close}>
+                  Download résumé <Download size={16} />
+                </a>
+                <a href={profile.socials.github} target="_blank" rel="noopener noreferrer" className="icon-btn" aria-label="GitHub">
+                  <SiGithub size={17} />
+                </a>
+                <a href={profile.socials.linkedin} target="_blank" rel="noopener noreferrer" className="icon-btn" aria-label="LinkedIn">
+                  <FaLinkedinIn size={17} />
+                </a>
+              </div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 

@@ -2,95 +2,199 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ------------------------------------------------------------------ */
+/*  Design tokens — "Ember"                                           */
+/*  Values are RGB triplets so Tailwind opacity modifiers work.       */
+/* ------------------------------------------------------------------ */
 @layer base {
+  :root {
+    --bg: 250 249 246;
+    --surface: 255 255 255;
+    --surface-2: 243 242 238;
+    --line: 228 226 220;
+    --fg: 14 14 16;
+    --muted: 96 96 106;
+    --accent: 255 107 44;
+    --accent-ink: 194 65 12;
+    --accent-fg: 12 10 9;
+    color-scheme: light;
+  }
+
+  .dark {
+    --bg: 10 10 11;
+    --surface: 17 17 19;
+    --surface-2: 24 24 27;
+    --line: 38 38 43;
+    --fg: 237 236 232;
+    --muted: 145 145 154;
+    --accent: 255 107 44;
+    --accent-ink: 255 132 80;
+    --accent-fg: 12 10 9;
+    color-scheme: dark;
+  }
+
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 80px;
+    scroll-padding-top: 96px;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
-    @apply bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300;
+    @apply bg-bg font-sans text-fg antialiased;
+    text-rendering: optimizeLegibility;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-bold;
+  ::selection {
+    background: rgb(var(--accent));
+    color: rgb(var(--accent-fg));
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 3px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgb(var(--bg));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--line));
+    border: 2px solid rgb(var(--bg));
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--muted) / 0.6);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 }
 
+/* ------------------------------------------------------------------ */
+/*  Components                                                        */
+/* ------------------------------------------------------------------ */
 @layer components {
-  .container-custom {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  .container-x {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
   }
 
-  .section-title {
-    @apply text-3xl sm:text-4xl font-bold mb-8 relative inline-block;
-  }
-
-  .section-title::after {
-    content: "";
-    @apply absolute bottom-0 left-0 w-1/2 h-1 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full;
-  }
-
-  .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600;
+  .eyebrow {
+    @apply font-mono text-[11px] uppercase tracking-[0.18em] text-muted;
   }
 
   .card {
-    @apply bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg;
+    @apply relative rounded-3xl border border-line bg-surface;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-surface-2/70 px-2.5 py-1 font-mono text-[11px] leading-none text-muted;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-medium transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-60;
   }
 
   .btn-primary {
-    @apply inline-flex items-center px-5 py-2.5 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium transform transition-all duration-300 hover:scale-105 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50;
+    @apply btn bg-accent text-accent-fg hover:-translate-y-0.5;
+    box-shadow: 0 10px 30px -10px rgb(var(--accent) / 0.7);
+  }
+  .btn-primary:hover {
+    box-shadow: 0 16px 40px -12px rgb(var(--accent) / 0.85);
   }
 
-  .btn-secondary {
-    @apply inline-flex items-center px-5 py-2.5 rounded-lg border-2 border-purple-600 text-purple-600 dark:text-purple-400 font-medium transform transition-all duration-300 hover:scale-105 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50;
+  .btn-ghost {
+    @apply btn border border-line bg-surface/70 text-fg backdrop-blur hover:-translate-y-0.5 hover:border-fg/25 hover:bg-surface-2;
   }
 
-  .nav-link {
-    @apply px-3 py-2 text-gray-700 dark:text-gray-300 rounded-md hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-200;
+  .icon-btn {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-full border border-line bg-surface/70 text-fg backdrop-blur transition-colors duration-300 hover:border-fg/25 hover:bg-surface-2;
   }
 
-  .nav-link.active {
-    @apply text-purple-600 dark:text-purple-400 font-medium;
+  .field {
+    @apply w-full rounded-xl border border-line bg-bg px-4 py-3 text-sm text-fg outline-none transition placeholder:text-muted/60 focus:border-accent focus:ring-4 focus:ring-accent/15;
   }
 
-  .tech-icon {
-    @apply flex flex-col items-center justify-center p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md transition-all duration-300 hover:scale-110 hover:shadow-lg;
-  }
-
-  .project-card {
-    @apply card p-4 h-full flex flex-col justify-between hover:-translate-y-2;
-  }
-
-  .exp-card {
-    @apply card p-6 mb-6 border-l-4 border-purple-500;
-  }
-
-  .social-icon {
-    @apply flex items-center justify-center w-10 h-10 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full hover:bg-purple-500 hover:text-white transition-colors duration-300;
-  }
-
-  .pill {
-    @apply px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 text-xs font-medium mr-2 mb-2;
+  .serif-accent {
+    @apply font-serif font-normal italic tracking-normal text-accent-ink;
   }
 }
 
-/* Animation for gradient background */
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
+/* ------------------------------------------------------------------ */
+/*  Utilities & effects                                               */
+/* ------------------------------------------------------------------ */
+@layer utilities {
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgb(var(--line) / 0.75) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(var(--line) / 0.75) 1px, transparent 1px);
+    background-size: 56px 56px;
   }
-  50% {
-    background-position: 100% 50%;
+
+  .mask-radial-top {
+    -webkit-mask-image: radial-gradient(ellipse 75% 60% at 50% 0%, #000 35%, transparent 100%);
+    mask-image: radial-gradient(ellipse 75% 60% at 50% 0%, #000 35%, transparent 100%);
   }
-  100% {
-    background-position: 0% 50%;
+
+  .mask-x {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  }
+
+  .pause-on-hover:hover > * {
+    animation-play-state: paused;
   }
 }
 
-.gradient-animate {
-  background: linear-gradient(-45deg, #6366f1, #8b5cf6, #ec4899, #8b5cf6);
-  background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
+/* Cursor-following spotlight for cards */
+.spotlight {
+  isolation: isolate;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+.spotlight::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    420px circle at var(--mx, 50%) var(--my, 50%),
+    rgb(var(--accent) / 0.1),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+.spotlight:hover {
+  border-color: rgb(var(--fg) / 0.16);
+}
+.spotlight:hover::before {
+  opacity: 1;
+}
+
+/* Subtle film grain over the whole page */
+.grain::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Animated underline for text links */
+.link-underline {
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size 0.35s ease;
+}
+.link-underline:hover {
+  background-size: 100% 1px;
 }

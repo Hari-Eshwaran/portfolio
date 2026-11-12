@@ -1,211 +1,236 @@
-import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Github, Linkedin, Send, CheckCircle } from 'lucide-react';
-import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../../config/firebase';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { AlertCircle, ArrowUpRight, Check, CheckCircle2, Copy, Loader2, Mail, MapPin, Phone, Send } from 'lucide-react';
+import { FaLinkedinIn } from 'react-icons/fa';
+import { SiGithub } from 'react-icons/si';
+import { profile } from '../../data/portfolio';
+import type { ContactFormData } from '../../types';
+import Reveal from '../ui/Reveal';
+import { Accent } from '../ui/SectionHeading';
+import LocalTime from '../ui/LocalTime';
 
-const Contact: React.FC = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
+type Status = 'idle' | 'submitting' | 'success' | 'error';
 
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+const EMPTY_FORM: ContactFormData = { name: '', email: '', message: '' };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+const Contact = () => {
+  const [formData, setFormData] = useState<ContactFormData>(EMPTY_FORM);
+  const [status, setStatus] = useState<Status>('idle');
+  const [copied, setCopied] = useState(false);
+
+  const primaryEmail = profile.emails[0];
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setSubmitStatus('submitting');
-    
+    setStatus('submitting');
+
     try {
-      // Add the form data to Firestore
-      await addDoc(collection(db, 'contacts'), {
-        ...formData,
-        timestamp: new Date()
-      });
-      
-      setSubmitStatus('success');
-      setFormData({ name: '', email: '', message: '' });
-      
-      // Reset after 3 seconds
-      setTimeout(() => {
-        setSubmitStatus('idle');
-      }, 3000);
+      // Firebase is loaded on demand to keep the initial bundle light.
+      const [{ db }, { collection, addDoc }] = await Promise.all([
+        import('../../config/firebase'),
+        import('firebase/firestore'),
+      ]);
+      await addDoc(collection(db, 'contacts'), { ...formData, timestamp: new Date() });
+      setStatus('success');
+      setFormData(EMPTY_FORM);
     } catch (error) {
       console.error('Error submitting form:', error);
-      setSubmitStatus('error');
-      
-      // Reset error status after 3 seconds
-      setTimeout(() => {
-        setSubmitStatus('idle');
-      }, 3000);
+      setStatus('error');
+    } finally {
+      window.setTimeout(() => setStatus('idle'), 4000);
     }
   };
 
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(primaryEmail);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      window.location.href = `mailto:${primaryEmail}`;
+    }
+  };
+
+  const details = [
+    ...profile.emails.map((email) => ({ icon: Mail, label: 'Email', value: email, href: `mailto:${email}` })),
+    { icon: Phone, label: 'Phone', value: profile.phone.label, href: profile.phone.href },
+  ];
+
   return (
-    <section id="contact" className="py-20">
-      <div className="container-custom">
-        <h2 className="section-title">Get In Touch</h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {/* Contact Form */}
-          <div className="card p-6">
-            <h3 className="text-xl font-bold mb-6">Send Message</h3>
-            <form onSubmit={handleSubmit} className="space-y-4">
+    <section id="contact" className="relative overflow-hidden border-t border-line py-24 md:py-32">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+        <div className="bg-grid absolute inset-0 opacity-50 [mask-image:radial-gradient(ellipse_70%_60%_at_20%_40%,#000_20%,transparent_100%)]" />
+        <div className="absolute -left-40 top-20 h-[460px] w-[460px] rounded-full bg-accent/10 blur-[120px]" />
+      </div>
+
+      <div className="container-x grid gap-14 lg:grid-cols-12 lg:gap-12">
+        {/* Pitch */}
+        <div className="lg:col-span-6">
+          <Reveal>
+            <p className="eyebrow flex items-center gap-3">
+              <span className="text-accent-ink">07</span>
+              <span className="h-px w-8 bg-line" aria-hidden="true" />
+              Contact
+            </p>
+            <h2 className="mt-5 text-balance text-5xl font-semibold leading-[0.98] tracking-[-0.045em] sm:text-6xl md:text-7xl">
+              Let's build something <Accent>remarkable</Accent>.
+            </h2>
+            <p className="mt-6 max-w-md text-lg leading-relaxed text-muted">
+              Have a project, a role or an idea in mind? I'd love to hear about it — drop a message
+              and let's talk.
+            </p>
+          </Reveal>
+
+          {/* Primary email with copy */}
+          <Reveal delay={0.08} className="mt-10">
+            <div className="flex flex-wrap items-center gap-3">
+              <a
+                href={`mailto:${primaryEmail}`}
+                className="group inline-flex items-center gap-2 text-xl font-medium tracking-tight sm:text-2xl"
+              >
+                <span className="link-underline">{primaryEmail}</span>
+                <ArrowUpRight size={20} className="text-accent-ink transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </a>
+              <button
+                type="button"
+                onClick={copyEmail}
+                className="icon-btn !h-9 !w-9"
+                aria-label={copied ? 'Email copied' : 'Copy email address'}
+                title={copied ? 'Copied!' : 'Copy email'}
+              >
+                {copied ? <Check size={15} className="text-emerald-500" /> : <Copy size={15} />}
+              </button>
+              <span role="status" className="sr-only">
+                {copied ? 'Email address copied to clipboard' : ''}
+              </span>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.12}>
+            <ul className="mt-10 divide-y divide-line border-y border-line">
+              {details.map(({ icon: Icon, label, value, href }) => (
+                <li key={value}>
+                  <a href={href} className="group flex items-center gap-4 py-4">
+                    <Icon size={17} className="text-muted transition-colors group-hover:text-accent-ink" />
+                    <span className="w-16 font-mono text-[11px] uppercase tracking-[0.14em] text-muted">{label}</span>
+                    <span className="truncate transition-colors group-hover:text-accent-ink">{value}</span>
+                  </a>
+                </li>
+              ))}
+              <li className="flex items-center gap-4 py-4">
+                <MapPin size={17} className="text-muted" />
+                <span className="w-16 font-mono text-[11px] uppercase tracking-[0.14em] text-muted">Based</span>
+                <span>
+                  {profile.location} <span className="font-mono text-sm text-muted">· <LocalTime /></span>
+                </span>
+              </li>
+            </ul>
+          </Reveal>
+
+          <Reveal delay={0.16} className="mt-8 flex flex-wrap gap-3">
+            <a href={profile.socials.github} target="_blank" rel="noopener noreferrer" className="btn-ghost !py-2.5">
+              <SiGithub size={15} /> GitHub
+            </a>
+            <a href={profile.socials.linkedin} target="_blank" rel="noopener noreferrer" className="btn-ghost !py-2.5">
+              <FaLinkedinIn size={15} /> LinkedIn
+            </a>
+          </Reveal>
+        </div>
+
+        {/* Form */}
+        <Reveal delay={0.1} className="lg:col-span-6">
+          <form
+            onSubmit={handleSubmit}
+            className="card p-6 shadow-2xl shadow-black/5 sm:p-8 dark:shadow-black/30"
+            aria-describedby="form-status"
+          >
+            <h3 className="text-xl font-semibold tracking-tight">Send a message</h3>
+            <p className="mt-1.5 text-sm text-muted">All fields are required.</p>
+
+            <div className="mt-8 grid gap-5 sm:grid-cols-2">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="name" className="eyebrow mb-2 block">
                   Name
                 </label>
                 <input
-                  type="text"
                   id="name"
                   name="name"
+                  type="text"
+                  autoComplete="name"
+                  required
                   value={formData.name}
                   onChange={handleChange}
-                  required
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  placeholder="Your name"
+                  className="field"
+                  placeholder="Jane Doe"
                 />
               </div>
-              
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="email" className="eyebrow mb-2 block">
                   Email
                 </label>
                 <input
-                  type="email"
                   id="email"
                   name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
                   value={formData.email}
                   onChange={handleChange}
-                  required
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  placeholder="your.email@example.com"
+                  className="field"
+                  placeholder="jane@company.com"
                 />
               </div>
-              
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <div className="sm:col-span-2">
+                <label htmlFor="message" className="eyebrow mb-2 block">
                   Message
                 </label>
                 <textarea
                   id="message"
                   name="message"
+                  required
+                  rows={6}
                   value={formData.message}
                   onChange={handleChange}
-                  required
-                  rows={4}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  placeholder="Your message..."
+                  className="field resize-none"
+                  placeholder="Tell me about your project, role or idea…"
                 />
               </div>
-              
-              <button
-                type="submit"
-                disabled={submitStatus === 'submitting'}
-                className={`w-full btn-primary flex items-center justify-center ${
-                  submitStatus === 'submitting' ? 'opacity-75 cursor-not-allowed' : ''
-                }`}
-              >
-                {submitStatus === 'submitting' ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                    Sending...
-                  </>
-                ) : submitStatus === 'success' ? (
-                  <>
-                    <CheckCircle size={18} className="mr-2" />
-                    Message Sent!
-                  </>
-                ) : (
-                  <>
-                    <Send size={18} className="mr-2" />
-                    Send Message
-                  </>
-                )}
-              </button>
-              
-              {submitStatus === 'error' && (
-                <p className="text-red-500 text-sm text-center">
-                  Failed to send message. Please try again.
-                </p>
-              )}
-            </form>
-          </div>
+            </div>
 
-          {/* Contact Information */}
-          <div className="space-y-6">
-            <div className="card p-6">
-              <h3 className="text-xl font-bold mb-6">Contact Information</h3>
-              <div className="space-y-4">
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 mr-3">
-                    <Mail size={20} className="text-purple-600 dark:text-purple-400" />
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-800 dark:text-gray-200">Email</h4>
-                    <a href="mailto:harishwaran@hexpertify.com" className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400">
-                      harishwaran@hexpertify.com
-                    </a>
-                    <br />
-                    <a href="mailto:tech@harishwaran.dpdns.org" className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400">
-                      tech@harishwaran.dpdns.org
-                    </a>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 mr-3">
-                    <Phone size={20} className="text-purple-600 dark:text-purple-400" />
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-800 dark:text-gray-200">Phone</h4>
-                    <a href="tel:+919344786408" className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400">
-                      +91 93447 86408
-                    </a>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 mr-3">
-                    <MapPin size={20} className="text-purple-600 dark:text-purple-400" />
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-800 dark:text-gray-200">Address</h4>
-                    <p className="text-gray-600 dark:text-gray-400">
-                      31 Ponniyamman Kovil, 3rd St, Alapakkam Porur, Chennai 600116
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="card p-6">
-              <h3 className="text-xl font-bold mb-6">Social Links</h3>
-              <div className="flex flex-col space-y-4">
-                <a
-                  href="https://github.com/Hari-Eshwaran"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300"
-                >
-                  <Github size={20} className="mr-3" />
-                  github.com/Hari-Eshwaran
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/harishwaran1"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300"
-                >
-                  <Linkedin size={20} className="mr-3" />
-                  linkedin.com/in/harishwaran1
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+            <button
+              type="submit"
+              disabled={status === 'submitting'}
+              className="btn-primary mt-7 w-full !py-3.5"
+            >
+              {status === 'submitting' ? (
+                <>
+                  <Loader2 size={17} className="animate-spin" /> Sending…
+                </>
+              ) : status === 'success' ? (
+                <>
+                  <CheckCircle2 size={17} /> Message sent — thank you!
+                </>
+              ) : (
+                <>
+                  Send message <Send size={16} />
+                </>
+              )}
+            </button>
+
+            <p id="form-status" role="status" aria-live="polite" className="mt-4 min-h-[1.25rem] text-center text-sm">
+              {status === 'error' && (
+                <span className="inline-flex items-center gap-1.5 text-red-500">
+                  <AlertCircle size={15} /> Something went wrong. Please try again or email me directly.
+                </span>
+              )}
+              {status === 'success' && <span className="text-muted">Your message has been received.</span>}
+            </p>
+          </form>
+        </Reveal>
       </div>
     </section>
   );

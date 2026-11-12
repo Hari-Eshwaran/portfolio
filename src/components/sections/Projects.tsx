@@ -1,199 +1,198 @@
-import React, { useState } from 'react';
-import { Github, ExternalLink } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowUpRight, ChevronDown } from 'lucide-react';
+import { SiGithub } from 'react-icons/si';
+import { categoryLabel, profile, projectCategories, projects } from '../../data/portfolio';
+import type { Project, ProjectCategory } from '../../types';
+import Reveal from '../ui/Reveal';
+import { EASE_OUT } from '../ui/motion';
+import SectionHeading, { Accent } from '../ui/SectionHeading';
+import SpotlightCard from '../ui/SpotlightCard';
 
-interface Project {
-  title: string;
-  description: string;
-  technologies: string[];
-  category: 'ai' | 'web' | 'data';
-  image?: string;
-  githubLink?: string;
-  demoLink?: string;
-}
+type Filter = 'all' | ProjectCategory;
 
-const Projects: React.FC = () => {
-  const [filter, setFilter] = useState<'all' | 'ai' | 'web' | 'data'>('all');
+const INITIAL_COUNT = 6;
+const MAX_TAGS = 4;
 
-  const projects: Project[] = [
-    {
-      title: 'Face Emotion Recognition',
-      description: 'Deep learning model to detect and classify human facial emotions using CNN and RNN architectures.',
-      technologies: ['Python', 'TensorFlow', 'OpenCV', 'Keras'],
-      category: 'ai',
-      githubLink: 'https://github.com/Hari-Eshwaran/Face-Recog',
-      demoLink: 'https://auro-bot-snowy.vercel.app/'
-    },
-    {
-      title: 'Gesture Recognition',
-      description: 'LSTM-based system for recognizing hand gestures to enable touchless human-computer interaction.',
-      technologies: ['Python', 'TensorFlow', 'LSTM', 'Computer Vision'],
-      category: 'ai',
-      githubLink: '#'
-    },
-    {
-      title: 'HR Analysis',
-      description: 'Web application for HR departments to analyze employee data and derive actionable insights.',
-      technologies: ['React', 'Tailwind CSS', 'Supabase', 'Chart.js'],
-      category: 'web',
-      githubLink: 'https://github.com/Hari-Eshwaran/Employee-Performance-Dashboard',
-      demoLink: 'https://employee-performance-dashboard-nine.vercel.app/'
-    },
-    {
-      title: 'Power Outage Prediction',
-      description: 'Predictive model to forecast power outages based on historical data and weather patterns.',
-      technologies: ['React', 'Tailwind CSS', 'Supabase', 'Python', 'Machine Learning'],
-      category: 'data',
-      githubLink: 'https://github.com/Hari-Eshwaran/Power-Prediction',
-      demoLink: 'https://powerprediction.vercel.app/'
-    },
-    {
-      title: 'Approval Management System',
-      description: 'Workflow automation system for managing approval processes in organizations.',
-      technologies: ['React', 'Tailwind CSS', 'Supabase', 'Node.js'],
-      category: 'web',
-      githubLink: 'https://github.com/Hari-Eshwaran/Approval-Management-System',
-      demoLink: 'https://approval-management-system.vercel.app/'
-    },
-    {
-      title: 'FinEcho',
-      description: 'Financial management platform with budget tracking, expense analysis, and investment recommendations.',
-      technologies: ['React', 'TypeScript', 'Node.js', 'Supabase'],
-      category: 'web',
-      githubLink: 'https://github.com/Hari-Eshwaran/FinEcho',
-      demoLink: 'https://fin-echo.vercel.app/'
-    },
-    {
-      title: 'TastyLens-AR',
-      description: 'Augmented reality application that provides nutritional information and recipes by scanning food items.',
-      technologies: ['React', 'Node.js', 'Ethereum', 'ARKit', 'MongoDB'],
-      category: 'web',
-      githubLink: 'https://github.com/Hari-Eshwaran/TastyLens-AR',
-      demoLink: 'https://tastylensar.vercel.app/'
-    },
-    {
-      title: 'Heal-Fit',
-      description: 'Health and fitness tracking application with personalized workout and nutrition recommendations.',
-      technologies: ['React', 'TypeScript', 'Supabase'],
-      category: 'web',
-      githubLink: 'https://github.com/Hari-Eshwaran/Heal-fit',
-      demoLink: 'https://heal-fit.vercel.app/'
-    },
-    {
-      title: 'Human Activity Recognition',
-      description: 'AI system that recognizes human activities from video or sensor data using CNN and LSTM models.',
-      technologies: ['Python', 'TensorFlow', 'CNN', 'LSTM'],
-      category: 'ai',
-      githubLink: '#'
-    },
-    {
-      title: 'Employee Performance Dashboard',
-      description: 'Interactive dashboard for monitoring and analyzing employee performance metrics.',
-      technologies: ['Streamlit', 'Python', 'Pandas', 'Plotly'],
-      category: 'data',
-      githubLink: 'https://github.com/Hari-Eshwaran/Employee-Performance-Dashboard',
-      demoLink: 'https://employee-performance-dashboard-nine.vercel.app/'
-    },
-    {
-      title: 'AI-Powered Mental Health Analysis Dashboard',
-      description: 'This project provides a comprehensive mental health analysis dashboard that combines machine learning, data visualization, and interactive features to analyze mental health patterns, mood tracking, and student mental health statistics.\n\n🚀 ',
-      technologies: ['Python', 'Streamlit', 'Machine Learning', 'Data Visualization', 'Pandas', 'Plotly'],
-      category: 'ai',
-      githubLink: 'https://github.com/Hari-Eshwaran/AI-Powered-Mental-Health-Analysis-Dashboard'
-    },
-    {
-      title: 'Smart Traffic Management System (AI-Powered)',
-      description: 'A Streamlit web app that simulates a smart traffic light controller using AI to detect traffic density and prioritize lanes accordingly. Emergency vehicles are given highest priority with complete stop signals.',
-      technologies: ['Python', 'Streamlit', 'YOLOv5', 'OpenCV', 'Pandas', 'AI'],
-      category: 'ai',
-      githubLink: 'https://github.com/Hari-Eshwaran/Smart-Traffic-Management-System-AI-Powered'
-    },
-    {
-      title: 'Organ Donation DApp',
-      description: 'A decentralized platform for organ donation built with Next.js, Hardhat, and Solidity.',
-      technologies: ['Next.js', 'Hardhat', 'Solidity', 'TypeScript', 'Chakra UI', 'Ethers.js', 'Web3'],
-      category: 'web',
-      githubLink: 'https://github.com/Hari-Eshwaran/Organ-Donation-DApp'
-    }
-  ];
-
-  const filteredProjects = filter === 'all' 
-    ? projects 
-    : projects.filter(project => project.category === filter);
+const ProjectCard = ({ project, number }: { project: Project; number: string }) => {
+  const extraTags = project.technologies.length - MAX_TAGS;
 
   return (
-    <section id="projects" className="py-20">
-      <div className="container-custom">
-        <h2 className="section-title">Projects</h2>
-        
-        {/* Filter Buttons */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
-          <button 
-            onClick={() => setFilter('all')} 
-            className={`px-4 py-2 rounded-full ${filter === 'all' ? 'bg-purple-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'} transition-colors duration-300`}
+    <SpotlightCard className="group flex h-full flex-col p-6 hover:-translate-y-1 md:p-7">
+      <div className="flex items-center justify-between gap-3">
+        <span className="font-mono text-xs text-muted">
+          <span className="text-accent-ink">{number}</span> / {categoryLabel[project.category]}
+        </span>
+        {project.demoLink && (
+          <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-muted">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            Live
+          </span>
+        )}
+      </div>
+
+      <h3 className="mt-8 text-xl font-semibold tracking-tight md:text-2xl">{project.title}</h3>
+
+      {project.badge && (
+        <p className="mt-3 inline-flex w-fit items-center rounded-full bg-accent/10 px-2.5 py-1 font-mono text-[11px] text-accent-ink">
+          {project.badge}
+        </p>
+      )}
+
+      <p className="mt-3 text-[15px] leading-relaxed text-muted">{project.description}</p>
+
+      <ul className="mt-6 flex flex-wrap gap-1.5" aria-label="Tags">
+        {project.technologies.slice(0, MAX_TAGS).map((tech) => (
+          <li key={tech} className="chip">
+            {tech}
+          </li>
+        ))}
+        {extraTags > 0 && (
+          <li className="chip" title={project.technologies.slice(MAX_TAGS).join(', ')}>
+            +{extraTags}
+          </li>
+        )}
+      </ul>
+
+      <div className="mt-auto flex items-center gap-2 pt-7 empty:hidden">
+        {project.githubLink && (
+          <a
+            href={project.githubLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-ghost !px-3.5 !py-2 !text-[13px]"
+            aria-label={`${project.title} source code on GitHub`}
           >
-            All Projects
-          </button>
-          <button 
-            onClick={() => setFilter('ai')} 
-            className={`px-4 py-2 rounded-full ${filter === 'ai' ? 'bg-purple-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'} transition-colors duration-300`}
+            <SiGithub size={14} /> Code
+          </a>
+        )}
+        {project.demoLink && (
+          <a
+            href={project.demoLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn !px-3.5 !py-2 !text-[13px] text-fg hover:text-accent-ink"
+            aria-label={`Live demo of ${project.title}`}
           >
-            AI & ML
-          </button>
-          <button 
-            onClick={() => setFilter('web')} 
-            className={`px-4 py-2 rounded-full ${filter === 'web' ? 'bg-purple-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'} transition-colors duration-300`}
+            Live demo
+            <ArrowUpRight size={15} className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          </a>
+        )}
+      </div>
+    </SpotlightCard>
+  );
+};
+
+const Projects = () => {
+  const [filter, setFilter] = useState<Filter>('all');
+  const [expanded, setExpanded] = useState(false);
+
+  const counts = useMemo(() => {
+    const result: Record<Filter, number> = { all: projects.length, product: 0, ai: 0, web: 0, data: 0 };
+    projects.forEach((p) => (result[p.category] += 1));
+    return result;
+  }, []);
+
+  const filtered = useMemo(
+    () => (filter === 'all' ? projects : projects.filter((p) => p.category === filter)),
+    [filter],
+  );
+  const visible = expanded ? filtered : filtered.slice(0, INITIAL_COUNT);
+  const hiddenCount = filtered.length - visible.length;
+
+  const selectFilter = (next: Filter) => {
+    setFilter(next);
+    setExpanded(false);
+  };
+
+  return (
+    <section id="projects" className="relative border-t border-line py-24 md:py-32">
+      <div className="container-x">
+        <SectionHeading
+          index="03"
+          label="Selected work"
+          title={
+            <>
+              Things I've <Accent>shipped</Accent>.
+            </>
+          }
+          description="Products, AI systems and full-stack platforms — several live, two published as research."
+        />
+
+        {/* Filters */}
+        <Reveal className="mb-10 flex flex-wrap items-center justify-between gap-4">
+          <div
+            role="tablist"
+            aria-label="Filter projects"
+            className="flex max-w-full gap-1 overflow-x-auto rounded-full border border-line bg-surface p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            Web Dev
-          </button>
-          <button 
-            onClick={() => setFilter('data')} 
-            className={`px-4 py-2 rounded-full ${filter === 'data' ? 'bg-purple-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'} transition-colors duration-300`}
+            {projectCategories.map((cat) => {
+              const isActive = filter === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => selectFilter(cat.id)}
+                  className={`relative isolate shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-sm transition-colors duration-300 ${
+                    isActive ? 'text-accent-fg' : 'text-muted hover:text-fg'
+                  }`}
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId="project-filter"
+                      className="absolute inset-0 -z-10 rounded-full bg-accent"
+                      transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                    />
+                  )}
+                  {cat.label}
+                  <span className={`ml-1.5 font-mono text-[11px] ${isActive ? 'text-accent-fg/70' : 'text-muted/70'}`}>
+                    {counts[cat.id]}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          <a
+            href={profile.socials.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="link-underline inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-fg"
           >
-            Data Science
-          </button>
-        </div>
-        
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProjects.map((project, index) => (
-            <div key={index} className="project-card group">
-              {/* Project Title */}
-              <h3 className="text-xl font-bold mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-300">{project.title}</h3>
-              <p className="text-gray-700 dark:text-gray-300 mb-4">{project.description}</p>
-              <div className="flex flex-wrap mb-4">
-                {project.technologies.map((tech, i) => (
-                  <span key={i} className="pill">{tech}</span>
-                ))}
-              </div>
-              <div className="flex justify-between mt-auto">
-                {project.githubLink && (
-                  <a 
-                    href={project.githubLink} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="flex items-center text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300"
-                    aria-label={`View ${project.title} source code on GitHub`}
-                  >
-                    <Github size={18} className="mr-1" />
-                    Code
-                  </a>
-                )}
-                {project.demoLink && (
-                  <a 
-                    href={project.demoLink} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="flex items-center text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300"
-                    aria-label={`Visit live demo for ${project.title}`}
-                  >
-                    <ExternalLink size={18} className="mr-1" />
-                    Live Demo
-                  </a>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+            More on GitHub <ArrowUpRight size={14} />
+          </a>
+        </Reveal>
+
+        {/* Grid */}
+        <motion.ul layout className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <AnimatePresence mode="popLayout" initial={false}>
+            {visible.map((project) => (
+              <motion.li
+                key={project.title}
+                layout
+                initial={{ opacity: 0, y: 24, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.96 }}
+                transition={{ duration: 0.45, ease: EASE_OUT }}
+              >
+                <ProjectCard
+                  project={project}
+                  number={String(projects.indexOf(project) + 1).padStart(2, '0')}
+                />
+              </motion.li>
+            ))}
+          </AnimatePresence>
+        </motion.ul>
+
+        {hiddenCount > 0 && (
+          <div className="mt-10 flex justify-center">
+            <button type="button" onClick={() => setExpanded(true)} className="btn-ghost">
+              Show {hiddenCount} more project{hiddenCount > 1 ? 's' : ''}
+              <ChevronDown size={16} />
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

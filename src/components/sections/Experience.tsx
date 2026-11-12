@@ -1,97 +1,74 @@
-import React from 'react';
-import { Briefcase, Calendar } from 'lucide-react';
+import { experiences } from '../../data/portfolio';
+import Reveal from '../ui/Reveal';
+import SectionHeading, { Accent } from '../ui/SectionHeading';
 
-interface ExperienceItem {
-  company: string;
-  position: string;
-  period: string;
-  description: string;
-}
+const Experience = () => (
+  <section id="experience" className="relative border-t border-line py-24 md:py-32">
+    <div className="container-x">
+      <SectionHeading
+        index="02"
+        label="Experience"
+        title={
+          <>
+            Where I've <Accent>built</Accent> and led.
+          </>
+        }
+        description={`${experiences.length} roles across entrepreneurship, technical leadership, AI/ML, data analytics and full-stack engineering.`}
+      />
 
-const Experience: React.FC = () => {
-  const experiences: ExperienceItem[] = [
-    {
-      company: 'Hexpertify',
-      position: 'Chief Technology Officer (CTO)',
-      period: 'Since 2024',
-      description: 'Led the architecture and deployment of Hexpertify AI-powered consulting platform. Integrated React, TypeScript, Node.js, Supabase, and Gemini 1.5 Pro to power features like personalized expert matching, secure data storage, and voice-enabled AI assistants. Built scalable microservices to support mental health, fitness, legal, and financial consultations with <1s response times. Managed a cross-functional dev team and implemented agile workflows, boosting release velocity by 60%. Ensured robust data privacy & security policies, aligning with ISO and GDPR standards.'
-    },
-    {
-      company: 'OneYes Infotech Solutions Pvt. Ltd',
-      position: 'AI & ML Developer Intern',
-      period: 'May 2025 - June 2025',
-      description: 'Completed AI & ML Developer Internship Program at OneYes Infotech Solutions Pvt. Ltd. (Chennai) from 21st May 2025 to 20th June 2025. Awarded Certificate of Excellence for outstanding performance and successful completion of the program.'
-    },
-    {
-      company: 'Vulture Lines Pvt Ltd',
-      position: 'Data Analyst Intern',
-      period: 'Feb 2025 - Mar 2025',
-      description: 'Analyzed large datasets to extract meaningful insights. Developed data visualization dashboards to communicate findings effectively. Collaborated with cross-functional teams to identify business opportunities based on data analysis.'
-    },
-    {
-      company: 'Novitech Private Ltd',
-      position: 'Full Stack Developer',
-      period: 'Jun 2024 - Jul 2024',
-      description: 'Designed and implemented responsive web applications using React and Node.js. Collaborated with UX/UI designers to create user-friendly interfaces. Integrated backend APIs and optimized database queries for improved performance.'
-    },
-    {
-      company: 'Hyundai Transys Lear',
-      position: 'Production Management',
-      period: 'Sep 2023 - Oct 2023',
-      description: 'Monitored production processes and implemented efficiency improvements. Coordinated with different departments to ensure timely delivery of products. Analyzed production data to identify bottlenecks and suggest solutions.'
-    }
-  ];
+      <ol className="relative">
+        {experiences.map((exp, i) => (
+          <li key={`${exp.company}-${exp.position}`}>
+            <Reveal delay={Math.min(i * 0.04, 0.16)}>
+              <article className="group relative grid gap-4 border-t border-line py-10 md:grid-cols-12 md:gap-8 md:py-12">
+                {/* Hover accent line */}
+                <span
+                  aria-hidden="true"
+                  className="absolute -top-px left-0 h-px w-0 bg-accent transition-all duration-700 group-hover:w-full"
+                />
 
-  return (
-    <section id="experience" className="py-20">
-      <div className="container-custom">
-        <h2 className="section-title">Professional Experience</h2>
-        
-        <div className="relative">
-          {/* Timeline line */}
-          <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gray-200 dark:bg-gray-700"></div>
-          
-          {/* Experience Items */}
-          <div className="space-y-12">
-            {experiences.map((exp, index) => (
-              <div key={index} className="relative">
-                {/* Timeline dot */}
-                <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-purple-600 border-4 border-white dark:border-gray-900"></div>
-                
-                <div className={`md:w-5/12 ${index % 2 === 0 ? 'md:pr-12 md:ml-auto' : 'md:pl-12'}`}>
-                  <div className="exp-card">
-                    <h3 className="text-xl font-bold mb-1">
-                      {exp.position === 'Chief Technology Officer (CTO)' ? (
-                        <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-                          {exp.position}
-                        </span>
-                      ) : (
-                        exp.position
-                      )}
-                    </h3>
-                    <h4 className="text-lg text-purple-600 dark:text-purple-400 mb-2">
-                      {exp.company === 'Hexpertify' ? (
-                        <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-                          {exp.company}
-                        </span>
-                      ) : (
-                        exp.company
-                      )}
-                    </h4>
-                    <div className="flex items-center mb-4 text-gray-600 dark:text-gray-400">
-                      <Calendar size={16} className="mr-2" />
-                      {exp.period}
-                    </div>
-                    <p className="text-gray-700 dark:text-gray-300">{exp.description}</p>
-                  </div>
+                <div className="md:col-span-3">
+                  <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted">{exp.period}</p>
+                  {exp.current && (
+                    <span className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-2.5 py-1 font-mono text-[11px] text-accent-ink">
+                      <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                      Current role
+                    </span>
+                  )}
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
+
+                <div className="md:col-span-9">
+                  <h3 className="text-2xl font-semibold tracking-tight md:text-3xl">{exp.position}</h3>
+                  <p className="mt-1.5 text-lg text-accent-ink">{exp.company}</p>
+
+                  <ul className="mt-6 space-y-2.5 leading-relaxed text-muted">
+                    {exp.highlights.map((point) => (
+                      <li
+                        key={point}
+                        className="relative pl-6 before:absolute before:left-0 before:top-[0.8em] before:h-px before:w-3 before:bg-muted/60"
+                      >
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {exp.stack && (
+                    <ul className="mt-6 flex flex-wrap gap-2" aria-label="Technologies">
+                      {exp.stack.map((tech) => (
+                        <li key={tech} className="chip">
+                          {tech}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </article>
+            </Reveal>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+);
 
 export default Experience;
