@@ -90,15 +90,18 @@ const Contact = () => {
             <div className="flex flex-wrap items-center gap-3">
               <a
                 href={`mailto:${primaryEmail}`}
-                className="group inline-flex items-center gap-2 text-xl font-medium tracking-tight sm:text-2xl"
+                className="group inline-flex min-w-0 items-center gap-2 text-base font-medium tracking-tight sm:text-2xl"
               >
-                <span className="link-underline">{primaryEmail}</span>
-                <ArrowUpRight size={20} className="text-accent-ink transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                <span className="link-underline min-w-0 break-all">{primaryEmail}</span>
+                <ArrowUpRight
+                  size={20}
+                  className="hidden shrink-0 text-accent-ink transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 sm:block"
+                />
               </a>
               <button
                 type="button"
                 onClick={copyEmail}
-                className="icon-btn !h-9 !w-9"
+                className="icon-btn !h-9 !w-9 shrink-0"
                 aria-label={copied ? 'Email copied' : 'Copy email address'}
                 title={copied ? 'Copied!' : 'Copy email'}
               >

@@ -97,7 +97,10 @@ const About = () => {
               <CardLabel icon={GraduationCap}>Education</CardLabel>
               <p className="mt-6 text-xl font-semibold tracking-tight">{degree.degree}</p>
               <p className="mt-1 text-muted">{degree.institution}</p>
-              <p className="mt-4 font-mono text-xs text-muted">{degree.period}</p>
+              <p className="mt-4 font-mono text-xs text-muted">
+                {degree.period}
+                {degree.grade && <span className="text-accent-ink"> · {degree.grade}</span>}
+              </p>
             </SpotlightCard>
           </Reveal>
 

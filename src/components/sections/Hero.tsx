@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import { ArrowDown, ArrowRight, Download, MapPin, Trophy } from 'lucide-react';
-import { profile, stats } from '../../data/portfolio';
+import { achievements, profile, stats } from '../../data/portfolio';
+
+const latestWin = achievements[0];
 import LocalTime from '../ui/LocalTime';
 import { EASE_OUT } from '../ui/motion';
 
@@ -91,16 +93,16 @@ const Hero = ({ ready }: HeroProps) => {
             initial={{ opacity: 0, scale: 0.96, y: 24 }}
             animate={ready ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.96, y: 24 }}
             transition={{ duration: 1, delay: 0.35, ease: EASE_OUT }}
-            className="relative mx-auto w-full max-w-md lg:col-span-5 lg:max-w-none"
+            className="relative mx-auto w-full max-w-sm lg:col-span-5 lg:mr-0 lg:max-w-[400px]"
           >
             <div className="relative overflow-hidden rounded-[2rem] border border-line bg-surface-2 p-2 shadow-2xl shadow-black/10 dark:shadow-black/40">
               <div className="relative overflow-hidden rounded-[1.6rem]">
                 <img
                   src={profile.photo}
                   alt={`${profile.name} — ${profile.currentRole}, ${profile.currentCompany}`}
-                  width={1072}
-                  height={1072}
-                  className="aspect-[5/4] w-full object-cover object-[50%_42%] transition-transform duration-700 hover:scale-[1.03]"
+                  width={profile.photoSize}
+                  height={profile.photoSize}
+                  className="aspect-square w-full object-cover object-top transition-transform duration-700 hover:scale-[1.03]"
                 />
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-black/0" />
                 <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3 text-white">
@@ -124,8 +126,12 @@ const Hero = ({ ready }: HeroProps) => {
                   <Trophy size={17} />
                 </span>
                 <span className="leading-tight">
-                  <span className="block text-sm font-medium">1st Prize</span>
-                  <span className="block font-mono text-[11px] text-muted">Codeathon 3.0</span>
+                  <span className="block text-sm font-medium">
+                    {latestWin.rank} · {latestWin.event}
+                  </span>
+                  <span className="block font-mono text-[11px] text-muted">
+                    {[latestWin.host, latestWin.date].filter(Boolean).join(' · ')}
+                  </span>
                 </span>
               </div>
             </div>

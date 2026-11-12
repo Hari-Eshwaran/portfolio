@@ -88,9 +88,9 @@ const TechStack = () => (
         ))}
 
         {/* Certified-by banner */}
-        <Reveal delay={0.12} className="md:col-span-2 lg:col-span-3">
+        <Reveal delay={0.12} className="lg:col-span-2">
           <a href="#certifications" className="group block h-full">
-            <SpotlightCard className="flex h-full flex-col gap-6 overflow-hidden bg-fg p-7 text-bg md:flex-row md:items-center md:gap-8 md:p-8">
+            <SpotlightCard className="flex h-full flex-col gap-6 overflow-hidden bg-fg p-7 text-bg lg:flex-row lg:items-center lg:gap-8 lg:p-8">
               <div aria-hidden="true" className="absolute -bottom-20 right-10 h-56 w-56 rounded-full bg-accent/40 blur-3xl" />
               <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-accent text-accent-fg">
                 <BadgeCheck size={22} />

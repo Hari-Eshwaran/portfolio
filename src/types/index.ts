@@ -8,18 +8,20 @@ export type ProjectCategory = 'product' | 'ai' | 'web' | 'data';
 export interface Project {
   title: string;
   description: string;
+  /** Technologies or short descriptive tags. */
   technologies: string[];
   category: ProjectCategory;
   githubLink?: string;
   demoLink?: string;
-  /** Short highlight shown as a badge, e.g. "Published · ICEET 2025". */
-  badge?: string;
+  /** Short highlights shown as badges, e.g. "Winner · Codeathon 3.0". */
+  badges?: string[];
 }
 
 export interface Experience {
   company: string;
   position: string;
   period: string;
+  location?: string;
   current?: boolean;
   highlights: string[];
   stack?: string[];
@@ -29,6 +31,7 @@ export interface Education {
   institution: string;
   degree: string;
   period: string;
+  grade?: string;
   description?: string;
 }
 
@@ -41,10 +44,23 @@ export interface Certification {
 }
 
 export interface Achievement {
+  /** e.g. "Winner", "2nd Place", "Special Winner", "Finalist". */
+  rank: string;
+  event: string;
+  host?: string;
+  date?: string;
+  /** Project name — highlighted where it appears in the description. */
+  project?: string;
+  description: string;
+  /** Prize money in INR. */
+  prize?: number;
+  kind: 'award' | 'finalist';
+}
+
+export interface Publication {
+  venue: string;
   title: string;
   description: string;
-  kind: 'award' | 'publication' | 'finalist';
-  meta?: string;
 }
 
 export interface Skill {

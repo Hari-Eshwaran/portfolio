@@ -11,7 +11,7 @@ import SpotlightCard from '../ui/SpotlightCard';
 
 type Filter = 'all' | ProjectCategory;
 
-const INITIAL_COUNT = 6;
+const INITIAL_COUNT = 9;
 const MAX_TAGS = 4;
 
 const ProjectCard = ({ project, number }: { project: Project; number: string }) => {
@@ -33,10 +33,17 @@ const ProjectCard = ({ project, number }: { project: Project; number: string }) 
 
       <h3 className="mt-8 text-xl font-semibold tracking-tight md:text-2xl">{project.title}</h3>
 
-      {project.badge && (
-        <p className="mt-3 inline-flex w-fit items-center rounded-full bg-accent/10 px-2.5 py-1 font-mono text-[11px] text-accent-ink">
-          {project.badge}
-        </p>
+      {project.badges && (
+        <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Highlights">
+          {project.badges.map((badge) => (
+            <li
+              key={badge}
+              className="inline-flex items-center rounded-full bg-accent/10 px-2.5 py-1 font-mono text-[11px] text-accent-ink"
+            >
+              {badge}
+            </li>
+          ))}
+        </ul>
       )}
 
       <p className="mt-3 text-[15px] leading-relaxed text-muted">{project.description}</p>
@@ -116,7 +123,7 @@ const Projects = () => {
               Things I've <Accent>shipped</Accent>.
             </>
           }
-          description="Products, AI systems and full-stack platforms — several live, two published as research."
+          description="Products, award-winning AI systems and full-stack platforms — most of them live, two published as research."
         />
 
         {/* Filters */}

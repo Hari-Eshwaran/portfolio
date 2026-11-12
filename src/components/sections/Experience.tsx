@@ -29,6 +29,7 @@ const Experience = () => (
 
                 <div className="md:col-span-3">
                   <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted">{exp.period}</p>
+                  {exp.location && <p className="mt-1.5 text-sm text-muted">{exp.location}</p>}
                   {exp.current && (
                     <span className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-2.5 py-1 font-mono text-[11px] text-accent-ink">
                       <span className="h-1.5 w-1.5 rounded-full bg-accent" />
