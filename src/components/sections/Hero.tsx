@@ -93,7 +93,7 @@ const Hero = ({ ready }: HeroProps) => {
             initial={{ opacity: 0, scale: 0.96, y: 24 }}
             animate={ready ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.96, y: 24 }}
             transition={{ duration: 1, delay: 0.35, ease: EASE_OUT }}
-            className="relative mx-auto w-full max-w-sm lg:col-span-5 lg:mr-0 lg:max-w-[400px]"
+            className="relative mx-auto w-full max-w-md lg:col-span-5 lg:max-w-none"
           >
             <div className="relative overflow-hidden rounded-[2rem] border border-line bg-surface-2 p-2 shadow-2xl shadow-black/10 dark:shadow-black/40">
               <div className="relative overflow-hidden rounded-[1.6rem]">

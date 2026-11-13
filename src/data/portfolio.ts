@@ -97,9 +97,9 @@ export const profile = {
   currentSince: '2025',
   location: 'Chennai, India',
   timeZone: 'Asia/Kolkata',
-  /** Square headshot. A 1000px+ version will look sharper on high-DPI screens. */
-  photo: '/profile.png',
-  photoSize: 288,
+  /** Square headshot, 1000×1000 JPEG. */
+  photo: '/profile.jpg',
+  photoSize: 1000,
   resume: '/Harishwaran.pdf',
   emails: ['harishwaranpetchimuthu@gmail.com', 'tech@harishwaran.dpdns.org'],
   phone: { label: '+91 93447 86408', href: 'tel:+919344786408' },
