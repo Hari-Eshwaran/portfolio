@@ -13,12 +13,14 @@ const LocalTime = ({ className = '' }: { className?: string }) => {
   const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
+    // The pre-rendered HTML carries the build time; refresh immediately in the browser.
+    setNow(new Date());
     const id = window.setInterval(() => setNow(new Date()), 15_000);
     return () => window.clearInterval(id);
   }, []);
 
   return (
-    <time dateTime={now.toISOString()} className={`tabular-nums ${className}`}>
+    <time dateTime={now.toISOString()} className={`tabular-nums ${className}`} suppressHydrationWarning>
       {formatter.format(now)} IST
     </time>
   );

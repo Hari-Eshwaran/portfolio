@@ -1,13 +1,22 @@
 import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
+import { createRoot, hydrateRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 
-createRoot(document.getElementById('root')!).render(
+const container = document.getElementById('root')!;
+const app = (
   <StrictMode>
     <App />
-  </StrictMode>,
+  </StrictMode>
 );
+
+// Production builds ship pre-rendered HTML (see scripts/prerender.mjs), which React
+// takes over in place; the dev server serves an empty root, so render from scratch.
+if (container.hasChildNodes()) {
+  hydrateRoot(container, app);
+} else {
+  createRoot(container).render(app);
+}
 
 // Load Firebase (analytics) after the page is interactive so it never blocks first paint.
 const loadFirebase = () => {

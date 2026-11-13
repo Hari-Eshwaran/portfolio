@@ -5,12 +5,14 @@ import LocalTime from '../ui/LocalTime';
 import { EASE_OUT } from '../ui/motion';
 
 /*
- * Timing (seconds). Including the curtain lift, the intro takes ~4.3s on a fast
- * connection and never more than ~5s once the app has started:
- *   count 0 → 90 over COUNT_UP, wait for the page to finish loading (capped),
- *   then 90 → 100 over FINISH, hold briefly, and lift the curtain.
+ * Timing (seconds). The intro is part of the pre-rendered HTML, so it appears —
+ * and its name animation plays (pure CSS) — before JavaScript loads. Once React
+ * starts, the counter runs for whatever is left of COUNT_UP (at least
+ * MIN_COUNT_UP), waits briefly for the page to finish loading, goes 90 → 100,
+ * holds, and lifts the curtain. Typical total: ~4.5s from first paint.
  */
 const COUNT_UP = 2.6;
+const MIN_COUNT_UP = 1.2;
 const MAX_LOAD_WAIT = 0.8;
 const FINISH = 0.4;
 const HOLD = 0.25;
@@ -29,6 +31,12 @@ const pageReady = () =>
     document.fonts?.ready ?? Promise.resolve(),
   ]);
 
+/** Seconds the intro has already been on screen before React started (it ships in the HTML). */
+const shownFor = () => {
+  const paint = performance.getEntriesByType('paint').find((e) => e.name === 'first-contentful-paint');
+  return paint ? Math.max(0, (performance.now() - paint.startTime) / 1000) : 0;
+};
+
 const curtain: Variants = {
   exit: { y: '-115%', transition: { duration: 0.9, ease: CURTAIN_EASE, delay: 0.1 } },
 };
@@ -37,19 +45,18 @@ const content: Variants = {
   exit: { opacity: 0, y: -40, transition: { duration: 0.35, ease: EASE_OUT } },
 };
 
+/** Letter-by-letter reveal driven by CSS (see .intro-letter), so it plays before JavaScript loads. */
 const Letters = ({ text, delay, className }: { text: string; delay: number; className: string }) => (
   <span className="block overflow-hidden pb-[0.08em]" aria-hidden="true">
     <span className={`block whitespace-nowrap ${className}`}>
       {text.split('').map((char, i) => (
-        <motion.span
+        <span
           key={`${char}-${i}`}
-          className="inline-block"
-          initial={{ y: '115%' }}
-          animate={{ y: 0 }}
-          transition={{ duration: 0.9, delay: delay + i * 0.035, ease: EASE_OUT }}
+          className="intro-letter inline-block"
+          style={{ animationDelay: `${(delay + i * 0.035).toFixed(3)}s` }}
         >
           {char}
-        </motion.span>
+        </span>
       ))}
     </span>
   </span>
@@ -76,19 +83,25 @@ const Intro = ({ onComplete }: IntroProps) => {
     document.documentElement.style.overflow = 'hidden';
   }, []);
 
-  // Step through each role title once, ending on the last one.
+  // Step through each role title once, ending on the last one — fitted into the time that's left.
   useEffect(() => {
+    const elapsedMs = shownFor() * 1000;
+    const start = Math.max(0, ROLES_START_MS - elapsedMs);
+    const remainingMs = (Math.max(MIN_COUNT_UP, COUNT_UP - elapsedMs / 1000) + FINISH + HOLD) * 1000;
+    const steps = profile.roles.length - 1;
+    const interval = Math.min(ROLE_INTERVAL_MS, Math.max(400, (remainingMs - start - 250) / steps));
     const timers = profile.roles
       .slice(1)
-      .map((_, i) => window.setTimeout(() => setRoleIndex(i + 1), ROLES_START_MS + (i + 1) * ROLE_INTERVAL_MS));
+      .map((_, i) => window.setTimeout(() => setRoleIndex(i + 1), start + (i + 1) * interval));
     return () => timers.forEach((t) => window.clearTimeout(t));
   }, []);
 
   // Drive the counter, then lift the curtain.
   useEffect(() => {
     let cancelled = false;
+    const countUp = Math.max(MIN_COUNT_UP, COUNT_UP - shownFor());
     (async () => {
-      await animate(progress, 90, { duration: COUNT_UP, ease: [0.65, 0, 0.35, 1] });
+      await animate(progress, 90, { duration: countUp, ease: [0.65, 0, 0.35, 1] });
       await Promise.race([pageReady(), wait(MAX_LOAD_WAIT)]);
       if (cancelled) return;
       await animate(progress, 100, { duration: FINISH, ease: EASE_OUT });
@@ -131,6 +144,7 @@ const Intro = ({ onComplete }: IntroProps) => {
       {visible && (
         <motion.div
           key="intro"
+          data-intro=""
           variants={curtain}
           exit="exit"
           className="fixed inset-0 z-[100] bg-bg text-fg"
@@ -151,25 +165,17 @@ const Intro = ({ onComplete }: IntroProps) => {
           <motion.div variants={content} className="container-x relative flex h-full flex-col py-6 md:py-8">
             {/* Top bar */}
             <div className="flex items-center justify-between">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6 }}
-                className="flex items-center gap-3"
-              >
+              <div className="intro-fade flex items-center gap-3">
                 <span className="grid h-9 w-9 place-items-center rounded-xl bg-fg font-mono text-[11px] font-semibold tracking-wider text-bg">
                   {profile.initials}
                 </span>
-                <span className="eyebrow hidden sm:block">Portfolio — {new Date().getFullYear()}</span>
-              </motion.div>
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="font-mono text-xs text-muted"
-              >
+                <span className="eyebrow hidden sm:block" suppressHydrationWarning>
+                  Portfolio — {new Date().getFullYear()}
+                </span>
+              </div>
+              <p className="intro-fade font-mono text-xs text-muted" style={{ animationDelay: '0.1s' }}>
                 {profile.location} — <LocalTime />
-              </motion.p>
+              </p>
             </div>
 
             {/* Name + roles */}
@@ -185,11 +191,9 @@ const Intro = ({ onComplete }: IntroProps) => {
                 className="serif-accent -mt-[0.02em] text-[clamp(3rem,13vw,10.5rem)] leading-[0.95]"
               />
 
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: ROLES_START_MS / 1000 - 0.2 }}
-                className="mt-8 flex items-center gap-4 font-mono text-xs uppercase tracking-[0.2em] text-muted sm:text-sm"
+              <div
+                className="intro-fade mt-8 flex items-center gap-4 font-mono text-xs uppercase tracking-[0.2em] text-muted sm:text-sm"
+                style={{ animationDelay: `${ROLES_START_MS / 1000 - 0.2}s` }}
               >
                 <span aria-hidden="true" className="h-px w-10 shrink-0 bg-accent" />
                 {/* Old and new titles slide past each other, so one is always readable */}
@@ -207,7 +211,7 @@ const Intro = ({ onComplete }: IntroProps) => {
                     </motion.span>
                   </AnimatePresence>
                 </span>
-              </motion.div>
+              </div>
             </div>
 
             {/* Bottom bar */}

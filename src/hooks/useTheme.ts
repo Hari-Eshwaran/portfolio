@@ -7,19 +7,22 @@ const THEME_COLORS: Record<Theme, string> = {
   dark: '#0A0A0B',
 };
 
-const getInitialTheme = (): Theme =>
-  document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-
 /**
  * The initial theme is applied by an inline script in index.html (no flash).
- * This hook keeps React in sync and persists only explicit user choices.
+ * The page is pre-rendered at build time, where the visitor's theme is unknown,
+ * so `theme` stays null until the component mounts in the browser.
+ * Only explicit user choices are persisted.
  */
 export function useTheme() {
-  const [theme, setTheme] = useState<Theme>(getInitialTheme);
+  const [theme, setTheme] = useState<Theme | null>(null);
 
   useEffect(() => {
-    const root = document.documentElement;
-    root.classList.toggle('dark', theme === 'dark');
+    setTheme(document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+  }, []);
+
+  useEffect(() => {
+    if (!theme) return;
+    document.documentElement.classList.toggle('dark', theme === 'dark');
     document
       .querySelector('meta[name="theme-color"]')
       ?.setAttribute('content', THEME_COLORS[theme]);

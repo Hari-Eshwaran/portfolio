@@ -78,7 +78,9 @@ const Footer = () => {
 
       <div className="border-t border-line">
         <div className="container-x flex flex-col gap-2 py-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>© {year} {profile.name}. All rights reserved.</p>
+          <p suppressHydrationWarning>
+            © {year} {profile.name}. All rights reserved.
+          </p>
           <p className="font-mono">Designed &amp; built in Chennai</p>
         </div>
       </div>

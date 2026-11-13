@@ -190,6 +190,36 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
+/* Intro screen entrance — plain CSS so it plays from the pre-rendered HTML, before JavaScript loads */
+@keyframes intro-letter {
+  from {
+    transform: translateY(115%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes intro-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.intro-letter {
+  animation: intro-letter 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.intro-fade {
+  animation: intro-fade 0.6s ease both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .intro-letter,
+  .intro-fade {
+    animation: none;
+  }
+}
+
 /* Animated underline for text links */
 .link-underline {
   background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;

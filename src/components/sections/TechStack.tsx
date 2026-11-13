@@ -1,6 +1,7 @@
 import { ArrowUpRight, BadgeCheck } from 'lucide-react';
 import { professionalCertificates, skillGroups, totalCertifications } from '../../data/portfolio';
 import type { Skill } from '../../types';
+import { useMounted } from '../../hooks/useMounted';
 import Reveal from '../ui/Reveal';
 import SectionHeading, { Accent } from '../ui/SectionHeading';
 import SpotlightCard from '../ui/SpotlightCard';
@@ -18,28 +19,34 @@ const certifiedBy = Array.from(
   ),
 );
 
-const MarqueeRow = ({ items, reverse = false }: { items: Skill[]; reverse?: boolean }) => (
-  <div className="mask-x pause-on-hover flex overflow-hidden">
+/** Decorative logo strip — rendered in the browser only, to keep the static HTML light. */
+const MarqueeRow = ({ items, reverse = false, show }: { items: Skill[]; reverse?: boolean; show: boolean }) => (
+  <div className="mask-x pause-on-hover flex h-[42px] overflow-hidden">
     {/* Content is duplicated so the -50% translate loops seamlessly */}
-    <ul
-      className={`flex w-max shrink-0 gap-3 pr-3 motion-reduce:animate-none ${
-        reverse ? 'animate-marquee-reverse' : 'animate-marquee'
-      }`}
-    >
-      {[...items, ...items].map(({ name, icon: Icon }, i) => (
-        <li
-          key={`${name}-${i}`}
-          className="flex items-center gap-2.5 whitespace-nowrap rounded-full border border-line bg-surface px-4 py-2.5 text-sm"
-        >
-          <Icon size={16} className="text-muted" />
-          {name}
-        </li>
-      ))}
-    </ul>
+    {show && (
+      <ul
+        className={`flex w-max shrink-0 gap-3 pr-3 motion-reduce:animate-none ${
+          reverse ? 'animate-marquee-reverse' : 'animate-marquee'
+        }`}
+      >
+        {[...items, ...items].map(({ name, icon: Icon }, i) => (
+          <li
+            key={`${name}-${i}`}
+            className="flex items-center gap-2.5 whitespace-nowrap rounded-full border border-line bg-surface px-4 py-2.5 text-sm"
+          >
+            <Icon size={16} className="text-muted" />
+            {name}
+          </li>
+        ))}
+      </ul>
+    )}
   </div>
 );
 
-const TechStack = () => (
+const TechStack = () => {
+  const mounted = useMounted();
+
+  return (
   <section id="skills" className="relative overflow-hidden border-t border-line py-24 md:py-32">
     <div className="container-x">
       <SectionHeading
@@ -56,8 +63,8 @@ const TechStack = () => (
 
     {/* Marquee (decorative — the grid below lists everything) */}
     <div aria-hidden="true" className="mb-16 space-y-3 md:mb-20">
-      <MarqueeRow items={marqueeRows[0]} />
-      <MarqueeRow items={marqueeRows[1]} reverse />
+      <MarqueeRow items={marqueeRows[0]} show={mounted} />
+      <MarqueeRow items={marqueeRows[1]} reverse show={mounted} />
     </div>
 
     <div className="container-x">
@@ -78,7 +85,11 @@ const TechStack = () => (
                     key={name}
                     className="group/skill flex items-center gap-2 rounded-xl border border-line bg-bg px-3 py-2 text-sm transition-colors hover:border-fg/20"
                   >
-                    <Icon size={15} className="text-muted transition-colors group-hover/skill:text-accent-ink" />
+                    {mounted ? (
+                      <Icon size={15} className="text-muted transition-colors group-hover/skill:text-accent-ink" />
+                    ) : (
+                      <span aria-hidden="true" className="h-[15px] w-[15px]" />
+                    )}
                     {name}
                   </li>
                 ))}
@@ -109,6 +120,7 @@ const TechStack = () => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default TechStack;

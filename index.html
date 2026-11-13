@@ -116,6 +116,13 @@
         if (meta) meta.setAttribute('content', dark ? '#0A0A0B' : '#FAF9F6');
       })();
     </script>
+    <noscript>
+      <!-- Without JavaScript: skip the intro and show content that would otherwise fade in. -->
+      <style>
+        [data-intro] { display: none !important; }
+        #root [style*="opacity"] { opacity: 1 !important; transform: none !important; }
+      </style>
+    </noscript>
   </head>
   <body>
     <div id="root"></div>
